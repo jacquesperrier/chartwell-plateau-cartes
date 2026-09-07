@@ -1,1 +1,311 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Youssef Chekir — Chartwell Du Plateau</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+  :root{
+    --base: #F4F1EA;
+    --surface: #FFFFFF;
+    --blue: #1F6FC5;
+    --bourgogne: #722F37;
+    --brown: #5C4632;
+    --text: #2B2A28;
+    --text-dim: #7A756C;
+    --accent-gradient: linear-gradient(90deg, #1F6FC5 0%, #722F37 50%, #5C4632 100%);
+  }
 
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+
+  body{
+    background: var(--base);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 32px 20px;
+  }
+
+  .stage{
+    width: 100%;
+    max-width: 380px;
+    perspective: 1600px;
+  }
+
+  .card{
+    position: relative;
+    width: 100%;
+    aspect-ratio: 5 / 7.4;
+    transform-style: preserve-3d;
+    transition: transform 0.85s cubic-bezier(.2,.8,.2,1);
+    cursor: pointer;
+  }
+
+  .card.flipped{ transform: rotateY(180deg); }
+
+  .face{
+    position: absolute;
+    inset: 0;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    border-radius: 14px;
+    background: var(--surface);
+    border: 1px solid #E4E0D6;
+    box-shadow: 0 24px 50px -20px rgba(43,42,40,0.25);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .face.back{ transform: rotateY(180deg); }
+
+  .top-bar{
+    height: 6px;
+    background: var(--accent-gradient);
+  }
+
+  .mark{
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .mark-glyph{
+    display: flex;
+    width: 20px;
+    height: 20px;
+  }
+
+  .mark-glyph span{
+    display: block;
+    width: 6.5px;
+    height: 100%;
+    margin-right: 1px;
+  }
+  .mark-glyph span:nth-child(1){ background: var(--blue); border-radius: 2px 0 0 2px; }
+  .mark-glyph span:nth-child(2){ background: var(--bourgogne); }
+  .mark-glyph span:nth-child(3){ background: var(--brown); border-radius: 0 2px 2px 0; margin-right: 0; }
+
+  .mark-text{
+    font-size: 12px;
+    letter-spacing: 0.02em;
+    color: var(--text-dim);
+  }
+
+  .front-content{
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 30px 30px 24px;
+  }
+
+  .name-block{ margin-top: auto; }
+
+  .name{
+    font-family: 'Newsreader', serif;
+    font-weight: 500;
+    font-size: 32px;
+    line-height: 1.1;
+    color: var(--text);
+  }
+
+  .title{
+    margin-top: 10px;
+    font-size: 14px;
+    color: var(--bourgogne);
+    font-weight: 500;
+  }
+
+  .divider{
+    margin: 22px 0 16px;
+    height: 1px;
+    background: #E4E0D6;
+  }
+
+  .contact{
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 13px;
+  }
+
+  .contact a{
+    color: var(--text);
+    text-decoration: none;
+    opacity: 0.85;
+  }
+
+  .contact a:hover{ opacity: 1; }
+
+  .contact .addr{
+    color: var(--text-dim);
+    margin-top: 6px;
+    line-height: 1.5;
+  }
+
+  .footer-bar{
+    padding: 14px 30px 16px;
+    border-top: 1px solid #E4E0D6;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .company{
+    font-size: 13px;
+    color: var(--text);
+  }
+  .company b{ color: var(--blue); }
+  .company i{ color: var(--bourgogne); font-style: normal; }
+
+  .flip-hint{ font-size: 11px; color: var(--text-dim); }
+
+  .back-content{
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 30px;
+    gap: 18px;
+  }
+
+  .qr-wrap{
+    background: #FFFFFF;
+    padding: 14px;
+    border-radius: 10px;
+    line-height: 0;
+    border: 1px solid #E4E0D6;
+  }
+
+  .qr-caption{
+    font-size: 12.5px;
+    color: var(--text-dim);
+    text-align: center;
+    max-width: 220px;
+    line-height: 1.5;
+  }
+
+  .save-btn{
+    margin-top: 4px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: transparent;
+    border: 1px solid var(--bourgogne);
+    color: var(--bourgogne);
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 11px 20px;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease;
+  }
+
+  .save-btn:hover{ background: var(--bourgogne); color: #fff; }
+
+  @media (prefers-reduced-motion: reduce){
+    .card{ transition: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="stage">
+  <div class="card" id="card">
+
+    <div class="face front">
+      <div class="top-bar"></div>
+      <div class="front-content">
+        <div class="mark">
+          <div class="mark-glyph"><span></span><span></span><span></span></div>
+          <div class="mark-text">Chartwell Du Plateau</div>
+        </div>
+
+        <div class="name-block">
+          <div class="name">Youssef Chekir</div>
+          <div class="title">Directeur général / General Manager</div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="contact">
+          <a href="tel:+18197758550">Cell. 819 775-8550</a>
+          <a href="tel:+18197711245,6001">819 771-1245, poste 6001</a>
+          <a href="mailto:ychekir@chartwell.com">ychekir@chartwell.com</a>
+          <a href="https://chartwell.com" target="_blank" rel="noopener">chartwell.com</a>
+          <div class="addr">245, boul. du Plateau<br>Gatineau, QC&nbsp; J9A 0H9</div>
+        </div>
+      </div>
+      <div class="footer-bar">
+        <div class="company"><b>CHART</b><i>well</i> Du Plateau</div>
+        <div class="flip-hint">Toucher pour le code QR</div>
+      </div>
+    </div>
+
+    <div class="face back">
+      <div class="top-bar"></div>
+      <div class="back-content">
+        <div class="qr-wrap" id="qrcode"></div>
+        <div class="qr-caption">Balayer pour ajouter Youssef Chekir directement à vos contacts</div>
+        <button class="save-btn" id="save-btn">Télécharger la fiche contact</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  const vcard = [
+    "BEGIN:VCARD",
+    "VERSION:3.0",
+    "N:Chekir;Youssef;;;",
+    "FN:Youssef Chekir",
+    "ORG:Chartwell Du Plateau",
+    "TITLE:Directeur général / General Manager",
+    "TEL;TYPE=CELL:+1-819-775-8550",
+    "TEL;TYPE=WORK,VOICE:+1-819-771-1245;ext=6001",
+    "EMAIL;TYPE=WORK:ychekir@chartwell.com",
+    "ADR;TYPE=WORK:;;245, boul. du Plateau;Gatineau;QC;J9A 0H9;Canada",
+    "URL:https://chartwell.com",
+    "END:VCARD"
+  ].join("\n");
+
+  new QRCode(document.getElementById("qrcode"), {
+    text: vcard,
+    width: 168,
+    height: 168,
+    colorDark: "#2B2A28",
+    colorLight: "#FFFFFF",
+    correctLevel: QRCode.CorrectLevel.M
+  });
+
+  const card = document.getElementById("card");
+  card.addEventListener("click", (e) => {
+    if (e.target.closest("#save-btn") || e.target.closest("a")) return;
+    card.classList.toggle("flipped");
+  });
+
+  document.getElementById("save-btn").addEventListener("click", (e) => {
+    e.stopPropagation();
+    const blob = new Blob([vcard], { type: "text/vcard" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "youssef-chekir-chartwell.vcf";
+    link.click();
+    URL.revokeObjectURL(url);
+  });
+</script>
+
+</body>
+</html>
