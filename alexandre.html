@@ -1,1 +1,15 @@
+        <div class="qr-wrap" id="qrcode"></div>        <div class="qr-caption">Balayer pour ajouter Jacqueline McKnight directement à vos contacts</div>        <button class="save-btn" id="save-btn">Télécharger la fiche contact</button>      </div>    </div>   </div></div> <script>  const vcard = [    "BEGIN:VCARD",    "VERSION:3.0",    "N:McKnight;Jacqueline;;;",    "FN:Jacqueline McKnight",    "ORG:Chartwell Du Plateau",    "TITLE:Responsable des programmes d'animation et de loisir",    "TEL;TYPE=WORK,VOICE:+1-819-771-1245;ext=6010",    "EMAIL;TYPE=WORK:jmcknight@chartwell.com",    "ADR;TYPE=WORK:;;245, boul. du Plateau;Gatineau;QC;J9A 0H9;Canada",    "URL:https://chartwell.com",    "END:VCARD"  ].join("\n");   new QRCode(document.getElementById("qrcode"), {    text: vcard,    width: 168,    height: 168,    colorDark: "#2B2A28",    colorLight: "#FFFFFF",    correctLevel: QRCode.CorrectLevel.M  });   const card = document.getElementById("card");  card.addEventListener("click", (e) => {    if (e.target.closest("#save-btn") || e.target.closest("a")) return;    card.classList.toggle("flipped");  });   document.getElementById("save-btn").addEventListener("click", (e) => {    e.stopPropagation();    const blob = new Blob([vcard], { type: "text/vcard" });    const url = URL.createObjectURL(blob);    const link = document.createElement("a");    link.href = url;    link.download = "jacqueline-mcknight-chartwell.vcf";    link.click();    URL.revokeObjectURL(url);  });</script> </body></html> 
+
+
+
+
+
+
+
+
+
+
+
+
+
 
